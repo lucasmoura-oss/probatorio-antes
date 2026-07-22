@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxograma &mdash; Est&aacute;gio Probat&oacute;rio &mdash; IFSP Salto</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --doc:       #B45309; --doc-light: #FEF3C7;
+  --tae:       #1557A6; --tae-light: #E5EEF8;
+  --warn:      #9F1239; --warn-bg:   #FFF1F2;
+  --ok:        #166534; --ok-bg:     #DCFCE7;
+  --info:      #1e40af; --info-bg:   #EFF6FF;
+  --neu:       #374151; --neu-bg:    #F3F4F6;
+  --border:    #E5E7EB; --bg:        #F7F8FA;
+  --white:     #FFFFFF; --text:      #111827; --text-2: #6B7280;
+  --radius:    10px;    --shadow:    0 2px 10px rgba(0,0,0,.07);
+}
+html { scroll-behavior: smooth; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+
+/* HEADER */
+header { background: var(--white); border-bottom: 1px solid var(--border); padding: 18px 20px 0; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+.hd-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.hd-icon { width: 38px; height: 38px; border-radius: 8px; background: linear-gradient(135deg,#B45309,#1557A6); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.hd-text h1 { font-size: 15px; font-weight: 700; }
+.hd-text p  { font-size: 12px; color: var(--text-2); }
+.cargo-tabs { display: flex; gap: 4px; }
+.ctab { flex:1; padding: 10px 16px; border: none; border-bottom: 3px solid transparent; background: transparent; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--text-2); transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.ctab .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity:.35; transition: opacity .2s; }
+.ctab:hover { color: var(--text); }
+.ctab.active-doc { color: var(--doc); border-color: var(--doc); }
+.ctab.active-doc .dot { opacity:1; }
+.ctab.active-tae { color: var(--tae); border-color: var(--tae); }
+.ctab.active-tae .dot { opacity:1; }
+
+/* MAIN */
+main { max-width: 800px; margin: 0 auto; padding: 28px 16px 80px; }
+
+/* WELCOME */
+.welcome { text-align: center; padding: 52px 24px; }
+.welcome h2 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+.welcome p  { color: var(--text-2); max-width: 420px; margin: 0 auto 32px; }
+.welcome-cards { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.wcard { background: var(--white); border-radius: var(--radius); padding: 22px 28px; box-shadow: var(--shadow); cursor: pointer; border: 2px solid transparent; transition: transform .18s; min-width: 140px; text-align: center; }
+.wcard:hover { transform: translateY(-3px); }
+.wcard .wi { font-size: 30px; margin-bottom: 8px; }
+.wcard .wn { font-size: 15px; font-weight: 700; }
+.wcard .ws { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+.wcard.doc-c { border-color: var(--doc); color: var(--doc); }
+.wcard.tae-c { border-color: var(--tae); color: var(--tae); }
+
+/* SECTIONS */
+.cargo-section { display: none; animation: fadein .22s ease; }
+.cargo-section.visible { display: block; }
+@keyframes fadein { from { opacity:0; transform:translateY(5px); } to { opacity:1; } }
+
+/* ETAPA HEADER */
+.etapa-header { display: flex; align-items: center; gap: 10px; margin: 28px 0 14px; }
+.etapa-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; flex-shrink: 0; color: #fff; }
+.doc .etapa-num { background: var(--doc); }
+.tae .etapa-num { background: var(--tae); }
+.etapa-title { font-size: 17px; font-weight: 700; }
+.etapa-sub   { font-size: 12px; color: var(--text-2); }
+
+/* STEPS */
+.steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 6px; }
+.step { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+.step-head { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; cursor: pointer; user-select: none; transition: background .15s; }
+.step-head:hover { background: var(--bg); }
+.snum { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.doc .snum { background: var(--doc); color: #fff; }
+.tae .snum { background: var(--tae); color: #fff; }
+.step-title { flex:1; font-size: 14px; font-weight: 600; line-height: 1.4; }
+.step-arrow { font-size: 16px; color: var(--text-2); transition: transform .2s; flex-shrink:0; margin-top: 3px; }
+.step.open .step-arrow { transform: rotate(90deg); }
+.step-body { display: none; padding: 0 16px 16px 56px; }
+.step.open .step-body { display: block; }
+.step-body p, .step-body li { font-size: 13.5px; color: var(--text-2); }
+.step-body ul { margin-left: 16px; margin-top: 6px; }
+.step-body li { margin-bottom: 4px; }
+.step-body strong { color: var(--text); }
+
+/* PAGE REF */
+.pref { display: inline-flex; align-items: center; gap: 5px; background: var(--neu-bg); color: var(--neu); border-radius: 5px; font-size: 11px; font-weight: 600; padding: 2px 8px; margin-bottom: 10px; }
+
+/* SUAP BOX */
+.suap-box { background: var(--info-bg); border-left: 3px solid var(--info); border-radius: 6px; padding: 12px 14px; margin: 10px 0; font-size: 13px; }
+.suap-box .suap-title { font-weight: 700; color: var(--info); margin-bottom: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.suap-box ul { margin-left: 14px; }
+.suap-box li { margin-bottom: 3px; color: var(--text-2); }
+.suap-box li strong { color: var(--text); }
+.suap-path { background: #1e293b; color: #94a3b8; border-radius: 6px; font-family: ui-monospace, monospace; font-size: 12px; padding: 8px 12px; margin: 8px 0; }
+.suap-path span { color: #60a5fa; }
+
+/* ALERTS */
+.alert { border-radius: 7px; padding: 11px 13px; font-size: 13px; display: flex; gap: 9px; align-items: flex-start; margin: 10px 0; }
+.alert-warn { background: var(--warn-bg); border-left: 3px solid var(--warn); color: var(--warn); }
+.alert-ok   { background: var(--ok-bg);   border-left: 3px solid #16a34a;    color: var(--ok); }
+.alert-info { background: var(--info-bg); border-left: 3px solid var(--info); color: var(--info); }
+.alert-icon { font-size: 15px; flex-shrink: 0; line-height: 1.6; }
+
+/* SUB LABEL */
+.sub-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-2); margin: 14px 0 6px; }
+
+/* SINTESE BOX */
+.sintese-box { background: var(--neu-bg); border-radius: 8px; padding: 14px 16px; margin: 10px 0; font-size: 13.5px; }
+.sintese-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.sintese-box ul { margin-left: 16px; }
+.sintese-box li { margin-bottom: 4px; color: var(--text-2); }
+
+/* DIVIDER */
+hr.div { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* RECONSIDE */
+.recon-block { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px; margin-top: 24px; }
+.recon-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-2); margin-bottom: 12px; }
+
+/* BOTÃO VOLTAR */
+.btn-voltar {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 9px 16px;
+  font-size: 13.5px; font-weight: 600; color: var(--text-2);
+  cursor: pointer; transition: all .18s; margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.btn-voltar:hover { border-color: var(--text-2); color: var(--text); background: var(--bg); }
+.btn-voltar .arrow { font-size: 16px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-top">
+    <div class="hd-icon">&#128203;</div>
+    <div class="hd-text">
+      <h1>Fluxograma &mdash; Est&aacute;gio Probat&oacute;rio</h1>
+      <p>IFSP Campus Salto &nbsp;&bull;&nbsp; Res. n&ordm; 14/2022 (Docentes) e Res. n&ordm; 15/2022 (TAEs)</p>
+    </div>
+  </div>
+  <div class="cargo-tabs">
+    <button class="ctab" id="tab-doc" onclick="showCargo('doc')"><span class="dot"></span> Docente</button>
+    <button class="ctab" id="tab-tae" onclick="showCargo('tae')"><span class="dot"></span> TAE</button>
+  </div>
+</header>
+
+<main>
+
+<!-- WELCOME -->
+<div id="welcome" class="welcome">
+  <h2>Selecione o cargo</h2>
+  <p>Os procedimentos e modelos SUAP s&atilde;o diferentes para Docentes e TAEs. Escolha abaixo para ver o fluxo completo das 3 etapas.</p>
+  <div class="welcome-cards">
+    <div class="wcard doc-c" onclick="showCargo('doc')">
+      <div class="wi">&#127979;</div>
+      <div class="wn">Docente</div>
+      <div class="ws">Resolu&ccedil;&atilde;o n&ordm; 14/2022</div>
+    </div>
+    <div class="wcard tae-c" onclick="showCargo('tae')">
+      <div class="wi">&#128188;</div>
+      <div class="wn">TAE</div>
+      <div class="ws">Resolu&ccedil;&atilde;o n&ordm; 15/2022</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     DOCENTE
+══════════════════════════════════════ -->
+<div id="section-doc" class="cargo-section doc">
+
+  <button class="btn-voltar" onclick="voltarInicio()"><span class="arrow">&#8592;</span> Voltar &agrave; p&aacute;gina inicial</button>
+
+  <!-- ── ETAPA 1 DOC ── -->
+  <div class="etapa-header">
+    <div class="etapa-num">1</div>
+    <div>
+      <div class="etapa-title">1&ordf; Etapa &mdash; 10&ordm; m&ecirc;s de efetivo exerc&iacute;cio</div>
+      <div class="etapa-sub">Resolu&ccedil;&atilde;o n&ordm; 14/2022</div>
+    </div>
+  </div>
+  <div class="steps">
+
+    <div class="step" id="d1-1">
+      <div class="step-head" onclick="tog('d1-1')">
+        <span class="snum">1</span>
+        <span class="step-title">CGP abre o processo e insere documentos iniciais</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 1&ndash;2</div>
+        <p>At&eacute; 60 dias do in&iacute;cio do exerc&iacute;cio, a CGP deve:</p>
+        <ul>
+          <li>Abrir o processo de est&aacute;gio probat&oacute;rio no SUAP</li>
+          <li>Inserir a Resolu&ccedil;&atilde;o n&ordm; 14/2022</li>
+          <li>Inserir as Orienta&ccedil;&otilde;es &agrave; Chefia Imediata e ao Servidor</li>
+          <li>Solicitar ci&ecirc;ncia do servidor e da chefia via SUAP</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="d1-2">
+      <div class="step-head" onclick="tog('d1-2')">
+        <span class="snum">2</span>
+        <span class="step-title">CGP insere Relat&oacute;rio de Afastamentos e Requerimento de Levantamento</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <p>Antes de solicitar a juntada, a CGP deve inserir no processo:</p>
+        <ul>
+          <li>Relat&oacute;rio de Afastamentos da 1&ordf; etapa</li>
+          <li>Requerimento de Levantamento do Per&iacute;odo Avaliativo da 1&ordf; etapa</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="d1-3">
+      <div class="step-head" onclick="tog('d1-3')">
+        <span class="snum">3</span>
+        <span class="step-title">CGP solicita Juntada de Documentos no SUAP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3 e p. 16</div>
+        <p>A CGP emite a Solicita&ccedil;&atilde;o de Juntada de Documentos endere&ccedil;ada &agrave; chefia e ao servidor, informando quais documentos devem ser inseridos.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Prazo para juntada: <strong>5 dias corridos</strong> a partir da data da solicita&ccedil;&atilde;o.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d1-4">
+      <div class="step-head" onclick="tog('d1-4')">
+        <span class="snum">4</span>
+        <span class="step-title">Chefia insere Acompanhamento de Desempenho (durante todo o per&iacute;odo)</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 2&ndash;3</div>
+        <p>Ao menos <strong>uma vez durante o per&iacute;odo avaliativo</strong>, mesmo sem dificuldades.</p>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Acompanhamento de Desempenho &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; dados pessoais e dados pessoais sens&iacute;veis (art. 31 da Lei n&ordm; 12.527/2011)</li>
+            <li><strong>Assunto:</strong> Acompanhamento de Desempenho do servidor [nome do servidor]</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<div class="step" id="d1-5">
+      <div class="step-head" onclick="tog('d1-5')">
+        <span class="snum">5</span>
+        <span class="step-title">Chefia insere Avalia&ccedil;&atilde;o da Chefia Imediata</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3&ndash;4 e p. 16&ndash;17</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Avalia&ccedil;&atilde;o da Chefia Imediata &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Avalia&ccedil;&atilde;o da Chefia Imediata do servidor [nome]</li>
+          </ul>
+        </div>
+        <div class="sub-lbl">Como inserir no processo</div>
+        <ul>
+          <li>Documento criado no SUAP &rarr; clicar em <strong>&ldquo;Adicionar Documento&rdquo;</strong></li>
+          <li>Documento salvo no computador &rarr; clicar em <strong>&ldquo;Realizar Upload de Documento&rdquo;</strong></li>
+        </ul>
+        <div class="alert alert-warn"><span class="alert-icon">&#9888;</span><span>Somente ap&oacute;s inserir <strong>todos</strong> os documentos, clicar em <strong>&ldquo;Concluir Solicita&ccedil;&atilde;o&rdquo;</strong> &mdash; a&ccedil;&atilde;o irrevers&iacute;vel.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d1-6">
+      <div class="step-head" onclick="tog('d1-6')">
+        <span class="snum">6</span>
+        <span class="step-title">Servidor insere Autoavalia&ccedil;&atilde;o</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 5&ndash;6</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Autoavalia&ccedil;&atilde;o &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Autoavalia&ccedil;&atilde;o</li>
+          </ul>
+        </div>
+        <div class="alert alert-ok"><span class="alert-icon">&#8505;</span><span>A autoavalia&ccedil;&atilde;o <strong>n&atilde;o comp&otilde;e a nota final</strong>, mas &eacute; obrigat&oacute;ria.</span></div>
+        <div class="alert alert-warn"><span class="alert-icon">&#9888;</span><span>Concluir solicita&ccedil;&atilde;o somente ap&oacute;s inserir o documento &mdash; irrevers&iacute;vel.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d1-7">
+      <div class="step-head" onclick="tog('d1-7')">
+        <span class="snum">7</span>
+        <span class="step-title">CGP solicita ci&ecirc;ncia da Chefia e do Avaliado</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es</div>
+        <p>Ap&oacute;s a inser&ccedil;&atilde;o da Avalia&ccedil;&atilde;o da Chefia Imediata, a CGP solicita que a <strong>chefia</strong> e o <strong>servidor avaliado</strong> deem ci&ecirc;ncia via SUAP ao documento inserido.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>A ci&ecirc;ncia de ambos deve ser registrada antes de prosseguir &agrave;s pr&oacute;ximas etapas do processo.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d1-8">
+      <div class="step-head" onclick="tog('d1-8')">
+        <span class="snum">8</span>
+        <span class="step-title">CGP verifica, defere ou indefere e encaminha &agrave; CDP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Documentos corretos: <strong>deferir</strong> a solicita&ccedil;&atilde;o</li>
+          <li>Documentos incompletos/incorretos: <strong>indeferir</strong> e emitir nova solicita&ccedil;&atilde;o explicando o que corrigir</li>
+          <li>Ap&oacute;s ci&ecirc;ncia de cada etapa, encaminhar o processo &agrave; <strong>CDP</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /steps etapa 1 doc -->
+
+  <hr class="div">
+
+  <!-- ── ETAPA 2 DOC ── -->
+  <div class="etapa-header">
+    <div class="etapa-num">2</div>
+    <div>
+      <div class="etapa-title">2&ordf; Etapa &mdash; 20&ordm; m&ecirc;s de efetivo exerc&iacute;cio</div>
+      <div class="etapa-sub">Mesmos documentos da 1&ordf; etapa &bull; Sem S&iacute;ntese da Avalia&ccedil;&atilde;o &bull; Resolu&ccedil;&atilde;o n&ordm; 14/2022</div>
+    </div>
+  </div>
+  <div class="steps">
+
+    <div class="step" id="d2-1">
+      <div class="step-head" onclick="tog('d2-1')">
+        <span class="snum">1</span>
+        <span class="step-title">CGP insere Relat&oacute;rio de Afastamentos e Requerimento de Levantamento</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Relat&oacute;rio de Afastamentos da 2&ordf; etapa</li>
+          <li>Requerimento de Levantamento do Per&iacute;odo Avaliativo da 2&ordf; etapa</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="d2-2">
+      <div class="step-head" onclick="tog('d2-2')">
+        <span class="snum">2</span>
+        <span class="step-title">CGP solicita Juntada de Documentos no SUAP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3 e p. 16</div>
+        <p>A CGP emite a Solicita&ccedil;&atilde;o de Juntada de Documentos endere&ccedil;ada &agrave; chefia e ao servidor.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Prazo para juntada: <strong>5 dias corridos</strong> a partir da data da solicita&ccedil;&atilde;o.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d2-3">
+      <div class="step-head" onclick="tog('d2-3')">
+        <span class="snum">3</span>
+        <span class="step-title">Chefia insere Acompanhamento de Desempenho (durante todo o per&iacute;odo)</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 2&ndash;3</div>
+        <p>Ao menos <strong>uma vez durante o per&iacute;odo avaliativo</strong>, mesmo sem dificuldades.</p>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Acompanhamento de Desempenho &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; dados pessoais e dados pessoais sens&iacute;veis (art. 31 da Lei n&ordm; 12.527/2011)</li>
+            <li><strong>Assunto:</strong> Acompanhamento de Desempenho do servidor [nome do servidor]</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<div class="step" id="d2-4">
+      <div class="step-head" onclick="tog('d2-4')">
+        <span class="snum">4</span>
+        <span class="step-title">Chefia insere Avalia&ccedil;&atilde;o da Chefia Imediata</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3&ndash;4 e p. 16&ndash;17</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Avalia&ccedil;&atilde;o da Chefia Imediata &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Avalia&ccedil;&atilde;o da Chefia Imediata do servidor [nome]</li>
+          </ul>
+        </div>
+        <ul>
+          <li>Documento criado no SUAP &rarr; <strong>&ldquo;Adicionar Documento&rdquo;</strong></li>
+          <li>Arquivo no computador &rarr; <strong>&ldquo;Realizar Upload de Documento&rdquo;</strong></li>
+        </ul>
+        <div class="alert alert-warn"><span class="alert-icon">&#9888;</span><span>Somente ap&oacute;s inserir <strong>todos</strong> os documentos, clicar em <strong>&ldquo;Concluir Solicita&ccedil;&atilde;o&rdquo;</strong> &mdash; irrevers&iacute;vel.</span></div>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Na 2&ordf; etapa <strong>n&atilde;o</strong> se preenche a S&iacute;ntese da Avalia&ccedil;&atilde;o &mdash; somente na 3&ordf;.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d2-5">
+      <div class="step-head" onclick="tog('d2-5')">
+        <span class="snum">5</span>
+        <span class="step-title">Servidor insere Autoavalia&ccedil;&atilde;o</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 5&ndash;6</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Autoavalia&ccedil;&atilde;o &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Autoavalia&ccedil;&atilde;o</li>
+          </ul>
+        </div>
+        <div class="alert alert-ok"><span class="alert-icon">&#8505;</span><span>N&atilde;o comp&otilde;e a nota final, mas &eacute; obrigat&oacute;ria. Concluir solicita&ccedil;&atilde;o somente ap&oacute;s inserir.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d2-6">
+      <div class="step-head" onclick="tog('d2-6')">
+        <span class="snum">6</span>
+        <span class="step-title">CGP solicita ci&ecirc;ncia da Chefia e do Avaliado</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es</div>
+        <p>Ap&oacute;s a inser&ccedil;&atilde;o da Avalia&ccedil;&atilde;o da Chefia Imediata, a CGP solicita que a <strong>chefia</strong> e o <strong>servidor avaliado</strong> deem ci&ecirc;ncia via SUAP ao documento inserido.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>A ci&ecirc;ncia de ambos deve ser registrada antes de prosseguir &agrave;s pr&oacute;ximas etapas do processo.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d2-7">
+      <div class="step-head" onclick="tog('d2-7')">
+        <span class="snum">7</span>
+        <span class="step-title">CGP verifica, defere ou indefere e encaminha &agrave; CDP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Documentos corretos: <strong>deferir</strong></li>
+          <li>Documentos incorretos: <strong>indeferir</strong> e nova solicita&ccedil;&atilde;o explicando o que corrigir</li>
+          <li>Ap&oacute;s ci&ecirc;ncia, encaminhar &agrave; <strong>CDP</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /steps etapa 2 doc -->
+
+  <hr class="div">
+
+  <!-- ── ETAPA 3 DOC ── -->
+  <div class="etapa-header">
+    <div class="etapa-num">3</div>
+    <div>
+      <div class="etapa-title">3&ordf; Etapa &mdash; 30&ordm; m&ecirc;s de efetivo exerc&iacute;cio</div>
+      <div class="etapa-sub">Inclui S&iacute;ntese da Avalia&ccedil;&atilde;o e constitui&ccedil;&atilde;o da CAED &bull; Resolu&ccedil;&atilde;o n&ordm; 14/2022</div>
+    </div>
+  </div>
+  <div class="steps">
+
+    <div class="step" id="d3-1">
+      <div class="step-head" onclick="tog('d3-1')">
+        <span class="snum">1</span>
+        <span class="step-title">CGP insere Relat&oacute;rio de Afastamentos e Requerimento de Levantamento</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Relat&oacute;rio de Afastamentos da 3&ordf; etapa</li>
+          <li>Requerimento de Levantamento do Per&iacute;odo Avaliativo da 3&ordf; etapa</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="d3-2">
+      <div class="step-head" onclick="tog('d3-2')">
+        <span class="snum">2</span>
+        <span class="step-title">CGP solicita Juntada de Documentos no SUAP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3 e p. 16</div>
+        <p>A CGP emite a Solicita&ccedil;&atilde;o de Juntada de Documentos endere&ccedil;ada &agrave; chefia e ao servidor.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Prazo para juntada: <strong>5 dias corridos</strong> a partir da data da solicita&ccedil;&atilde;o.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d3-3">
+      <div class="step-head" onclick="tog('d3-3')">
+        <span class="snum">3</span>
+        <span class="step-title">Chefia insere Acompanhamento de Desempenho (durante todo o per&iacute;odo)</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 2&ndash;3</div>
+        <p>Ao menos <strong>uma vez durante o per&iacute;odo avaliativo</strong>, mesmo sem dificuldades.</p>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Acompanhamento de Desempenho &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; dados pessoais e dados pessoais sens&iacute;veis (art. 31 da Lei n&ordm; 12.527/2011)</li>
+            <li><strong>Assunto:</strong> Acompanhamento de Desempenho do servidor [nome do servidor]</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<div class="step" id="d3-4">
+      <div class="step-head" onclick="tog('d3-4')">
+        <span class="snum">4</span>
+        <span class="step-title">Chefia insere Avalia&ccedil;&atilde;o da Chefia Imediata + S&iacute;ntese da Avalia&ccedil;&atilde;o</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3&ndash;5 e p. 10&ndash;15</div>
+        <p>Na 3&ordf; etapa s&atilde;o <strong>dois documentos obrigat&oacute;rios</strong>:</p>
+
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Documento 1 &mdash; Avalia&ccedil;&atilde;o da Chefia Imediata</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Avalia&ccedil;&atilde;o da Chefia Imediata &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Avalia&ccedil;&atilde;o da Chefia Imediata do servidor [nome]</li>
+          </ul>
+        </div>
+
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Documento 2 &mdash; S&iacute;ntese da Avalia&ccedil;&atilde;o</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; S&iacute;ntese da Avalia&ccedil;&atilde;o &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> S&iacute;ntese da Avalia&ccedil;&atilde;o do servidor [nome]</li>
+          </ul>
+        </div>
+
+        <div class="sintese-box">
+          <h4>&#128221; Como preencher a S&iacute;ntese (p. 15)</h4>
+          <ul>
+            <li>Preencher os subtotais dos 3 per&iacute;odos por fator</li>
+            <li>Preencher a nota de cada per&iacute;odo (pontua&ccedil;&atilde;o obtida)</li>
+            <li>Calcular a M&eacute;dia Global: <strong>(NP1 + NP2 + NP3) &divide; 3</strong></li>
+            <li>Aprova&ccedil;&atilde;o: M&eacute;dia Global &ge; 60 pontos</li>
+          </ul>
+        </div>
+
+        <div class="alert alert-warn"><span class="alert-icon">&#9888;</span><span>Inserir <strong>ambos</strong> os documentos antes de clicar em &ldquo;Concluir Solicita&ccedil;&atilde;o&rdquo; &mdash; irrevers&iacute;vel.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d3-5">
+      <div class="step-head" onclick="tog('d3-5')">
+        <span class="snum">5</span>
+        <span class="step-title">Servidor insere Autoavalia&ccedil;&atilde;o</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 5&ndash;7</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Autoavalia&ccedil;&atilde;o &mdash; <strong>DOCENTE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Autoavalia&ccedil;&atilde;o</li>
+          </ul>
+        </div>
+        <div class="alert alert-ok"><span class="alert-icon">&#8505;</span><span>N&atilde;o comp&otilde;e a nota final, mas &eacute; obrigat&oacute;ria. Concluir solicita&ccedil;&atilde;o somente ap&oacute;s inserir.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d3-6">
+      <div class="step-head" onclick="tog('d3-6')">
+        <span class="snum">6</span>
+        <span class="step-title">CGP solicita ci&ecirc;ncia da Chefia e do Avaliado</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es</div>
+        <p>Ap&oacute;s a inser&ccedil;&atilde;o da Avalia&ccedil;&atilde;o da Chefia Imediata, a CGP solicita que a <strong>chefia</strong> e o <strong>servidor avaliado</strong> deem ci&ecirc;ncia via SUAP ao documento inserido.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>A ci&ecirc;ncia de ambos deve ser registrada antes de prosseguir &agrave;s pr&oacute;ximas etapas do processo.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="d3-7">
+      <div class="step-head" onclick="tog('d3-7')">
+        <span class="snum">7</span>
+        <span class="step-title">CGP verifica, defere ou indefere</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Documentos corretos: <strong>deferir</strong></li>
+          <li>Documentos incorretos: <strong>indeferir</strong> e nova solicita&ccedil;&atilde;o</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="d3-8">
+      <div class="step-head" onclick="tog('d3-8')">
+        <span class="snum">8</span>
+        <span class="step-title">CGP solicita Portaria de designa&ccedil;&atilde;o da CAED e envia ao PROB-DGP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 2</div>
+        <ul>
+          <li>Solicitar emiss&atilde;o da Portaria de designa&ccedil;&atilde;o da CAED</li>
+          <li>Inserir a Portaria e as Orienta&ccedil;&otilde;es &agrave; CAED no processo</li>
+          <li>Ap&oacute;s parecer da CAED, encaminhar o processo ao <strong>PROB-DGP</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /steps etapa 3 doc -->
+
+  <!-- Reconsideração DOC -->
+  <div class="recon-block">
+    <div class="recon-title">Pedido de Reconsidera&ccedil;&atilde;o &mdash; Servidor (qualquer etapa)</div>
+    <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 6&ndash;7</div>
+    <div class="suap-box">
+      <div class="suap-title">&#128187; Modelo SUAP &mdash; Servidor</div>
+      <ul>
+        <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Reconsidera&ccedil;&atilde;o/Recurso</li>
+        <li><strong>N&iacute;vel:</strong> Restrito &nbsp;&bull;&nbsp; <strong>Assunto:</strong> Reconsidera&ccedil;&atilde;o/Recurso</li>
+      </ul>
+    </div>
+    <div class="suap-box">
+      <div class="suap-title">&#128187; An&aacute;lise pela Chefia &mdash; Of&iacute;cio</div>
+      <ul>
+        <li><strong>Modelo:</strong> IFSP: EXPEDIENTE &ndash; OF&Iacute;CIO &ndash; USO GERAL</li>
+        <li><strong>Assunto:</strong> An&aacute;lise de Pedido de Reconsidera&ccedil;&atilde;o</li>
+      </ul>
+    </div>
+    <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Prazo do servidor: <strong>10 dias corridos</strong> para dar ci&ecirc;ncia e juntar documentos.</span></div>
+  </div>
+
+</div><!-- /section-doc -->
+
+
+<!-- ══════════════════════════════════════
+     TAE
+══════════════════════════════════════ -->
+<div id="section-tae" class="cargo-section tae">
+
+  <button class="btn-voltar" onclick="voltarInicio()"><span class="arrow">&#8592;</span> Voltar &agrave; p&aacute;gina inicial</button>
+
+  <!-- ── ETAPA 1 TAE ── -->
+  <div class="etapa-header">
+    <div class="etapa-num">1</div>
+    <div>
+      <div class="etapa-title">1&ordf; Etapa &mdash; 10&ordm; m&ecirc;s de efetivo exerc&iacute;cio</div>
+      <div class="etapa-sub">Resolu&ccedil;&atilde;o n&ordm; 15/2022</div>
+    </div>
+  </div>
+  <div class="steps">
+
+    <div class="step" id="t1-1">
+      <div class="step-head" onclick="tog('t1-1')">
+        <span class="snum">1</span>
+        <span class="step-title">CGP abre o processo e insere documentos iniciais</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 1&ndash;2</div>
+        <p>At&eacute; 60 dias do in&iacute;cio do exerc&iacute;cio, a CGP deve:</p>
+        <ul>
+          <li>Abrir o processo de est&aacute;gio probat&oacute;rio no SUAP</li>
+          <li>Inserir a Resolu&ccedil;&atilde;o n&ordm; 15/2022</li>
+          <li>Inserir as Orienta&ccedil;&otilde;es &agrave; Chefia Imediata e ao Servidor</li>
+          <li>Solicitar ci&ecirc;ncia do servidor e da chefia via SUAP</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="t1-2">
+      <div class="step-head" onclick="tog('t1-2')">
+        <span class="snum">2</span>
+        <span class="step-title">CGP insere Relat&oacute;rio de Afastamentos e Requerimento de Levantamento</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Relat&oacute;rio de Afastamentos da 1&ordf; etapa</li>
+          <li>Requerimento de Levantamento do Per&iacute;odo Avaliativo da 1&ordf; etapa</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="t1-3">
+      <div class="step-head" onclick="tog('t1-3')">
+        <span class="snum">3</span>
+        <span class="step-title">CGP solicita Juntada de Documentos no SUAP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3 e p. 16</div>
+        <p>A CGP emite a Solicita&ccedil;&atilde;o de Juntada de Documentos endere&ccedil;ada &agrave; chefia e ao servidor.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Prazo para juntada: <strong>5 dias corridos</strong> a partir da data da solicita&ccedil;&atilde;o.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t1-4">
+      <div class="step-head" onclick="tog('t1-4')">
+        <span class="snum">4</span>
+        <span class="step-title">Chefia insere Acompanhamento de Desempenho (durante todo o per&iacute;odo)</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 2&ndash;3</div>
+        <p>Ao menos <strong>uma vez durante o per&iacute;odo avaliativo</strong>, mesmo sem dificuldades.</p>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Acompanhamento de Desempenho &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; dados pessoais e dados pessoais sens&iacute;veis (art. 31 da Lei n&ordm; 12.527/2011)</li>
+            <li><strong>Assunto:</strong> Acompanhamento de Desempenho do servidor [nome do servidor]</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<div class="step" id="t1-5">
+      <div class="step-head" onclick="tog('t1-5')">
+        <span class="snum">5</span>
+        <span class="step-title">Chefia insere Avalia&ccedil;&atilde;o da Chefia Imediata</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3&ndash;4 e p. 16&ndash;17</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Avalia&ccedil;&atilde;o da Chefia Imediata &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Avalia&ccedil;&atilde;o da Chefia Imediata do servidor [nome]</li>
+          </ul>
+        </div>
+        <div class="sub-lbl">Escala de pontua&ccedil;&atilde;o por fator (p. 3)</div>
+        <p style="font-size:13px; color:var(--text-2); margin-bottom:8px;">1 = Nunca &nbsp;|&nbsp; 2 = Raramente &nbsp;|&nbsp; 3 = &Agrave;s vezes &nbsp;|&nbsp; 4 = Frequentemente &nbsp;|&nbsp; 5 = Sempre &nbsp;&mdash;&nbsp; <strong>M&aacute;x: 100 pontos</strong></p>
+        <div class="sub-lbl">Como inserir no processo</div>
+        <ul>
+          <li>Documento criado no SUAP &rarr; <strong>&ldquo;Adicionar Documento&rdquo;</strong></li>
+          <li>Arquivo no computador &rarr; <strong>&ldquo;Realizar Upload de Documento&rdquo;</strong></li>
+        </ul>
+        <div class="alert alert-warn"><span class="alert-icon">&#9888;</span><span>Somente ap&oacute;s inserir <strong>todos</strong> os documentos, clicar em <strong>&ldquo;Concluir Solicita&ccedil;&atilde;o&rdquo;</strong> &mdash; irrevers&iacute;vel.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t1-6">
+      <div class="step-head" onclick="tog('t1-6')">
+        <span class="snum">6</span>
+        <span class="step-title">Servidor insere Autoavalia&ccedil;&atilde;o</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 5&ndash;6</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Autoavalia&ccedil;&atilde;o &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Autoavalia&ccedil;&atilde;o</li>
+          </ul>
+        </div>
+        <div class="alert alert-ok"><span class="alert-icon">&#8505;</span><span>A autoavalia&ccedil;&atilde;o <strong>n&atilde;o comp&otilde;e a nota final</strong>, mas &eacute; obrigat&oacute;ria.</span></div>
+        <div class="alert alert-warn"><span class="alert-icon">&#9888;</span><span>Concluir solicita&ccedil;&atilde;o somente ap&oacute;s inserir o documento &mdash; irrevers&iacute;vel.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t1-7">
+      <div class="step-head" onclick="tog('t1-7')">
+        <span class="snum">7</span>
+        <span class="step-title">CGP solicita ci&ecirc;ncia da Chefia e do Avaliado</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es</div>
+        <p>Ap&oacute;s a inser&ccedil;&atilde;o da Avalia&ccedil;&atilde;o da Chefia Imediata, a CGP solicita que a <strong>chefia</strong> e o <strong>servidor avaliado</strong> deem ci&ecirc;ncia via SUAP ao documento inserido.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>A ci&ecirc;ncia de ambos deve ser registrada antes de prosseguir &agrave;s pr&oacute;ximas etapas do processo.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t1-8">
+      <div class="step-head" onclick="tog('t1-8')">
+        <span class="snum">8</span>
+        <span class="step-title">CGP verifica, defere ou indefere e encaminha &agrave; CDP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Documentos corretos: <strong>deferir</strong></li>
+          <li>Documentos incorretos: <strong>indeferir</strong> e emitir nova solicita&ccedil;&atilde;o explicando o que corrigir</li>
+          <li>Ap&oacute;s ci&ecirc;ncia, encaminhar o processo &agrave; <strong>CDP</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /steps etapa 1 tae -->
+
+  <hr class="div">
+
+  <!-- ── ETAPA 2 TAE ── -->
+  <div class="etapa-header">
+    <div class="etapa-num">2</div>
+    <div>
+      <div class="etapa-title">2&ordf; Etapa &mdash; 20&ordm; m&ecirc;s de efetivo exerc&iacute;cio</div>
+      <div class="etapa-sub">Mesmos documentos da 1&ordf; etapa &bull; Sem S&iacute;ntese da Avalia&ccedil;&atilde;o &bull; Resolu&ccedil;&atilde;o n&ordm; 15/2022</div>
+    </div>
+  </div>
+  <div class="steps">
+
+    <div class="step" id="t2-1">
+      <div class="step-head" onclick="tog('t2-1')">
+        <span class="snum">1</span>
+        <span class="step-title">CGP insere Relat&oacute;rio de Afastamentos e Requerimento de Levantamento</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Relat&oacute;rio de Afastamentos da 2&ordf; etapa</li>
+          <li>Requerimento de Levantamento do Per&iacute;odo Avaliativo da 2&ordf; etapa</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="t2-2">
+      <div class="step-head" onclick="tog('t2-2')">
+        <span class="snum">2</span>
+        <span class="step-title">CGP solicita Juntada de Documentos no SUAP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3 e p. 16</div>
+        <p>A CGP emite a Solicita&ccedil;&atilde;o de Juntada de Documentos endere&ccedil;ada &agrave; chefia e ao servidor.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Prazo para juntada: <strong>5 dias corridos</strong> a partir da data da solicita&ccedil;&atilde;o.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t2-3">
+      <div class="step-head" onclick="tog('t2-3')">
+        <span class="snum">3</span>
+        <span class="step-title">Chefia insere Acompanhamento de Desempenho (durante todo o per&iacute;odo)</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 2&ndash;3</div>
+        <p>Ao menos <strong>uma vez durante o per&iacute;odo avaliativo</strong>, mesmo sem dificuldades.</p>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Acompanhamento de Desempenho &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; dados pessoais e dados pessoais sens&iacute;veis (art. 31 da Lei n&ordm; 12.527/2011)</li>
+            <li><strong>Assunto:</strong> Acompanhamento de Desempenho do servidor [nome do servidor]</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<div class="step" id="t2-4">
+      <div class="step-head" onclick="tog('t2-4')">
+        <span class="snum">4</span>
+        <span class="step-title">Chefia insere Avalia&ccedil;&atilde;o da Chefia Imediata</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3&ndash;4 e p. 16&ndash;17</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Avalia&ccedil;&atilde;o da Chefia Imediata &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Avalia&ccedil;&atilde;o da Chefia Imediata do servidor [nome]</li>
+          </ul>
+        </div>
+        <ul>
+          <li>Documento criado no SUAP &rarr; <strong>&ldquo;Adicionar Documento&rdquo;</strong></li>
+          <li>Arquivo no computador &rarr; <strong>&ldquo;Realizar Upload de Documento&rdquo;</strong></li>
+        </ul>
+        <div class="alert alert-warn"><span class="alert-icon">&#9888;</span><span>Somente ap&oacute;s inserir <strong>todos</strong> os documentos, clicar em <strong>&ldquo;Concluir Solicita&ccedil;&atilde;o&rdquo;</strong> &mdash; irrevers&iacute;vel.</span></div>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Na 2&ordf; etapa <strong>n&atilde;o</strong> se preenche a S&iacute;ntese da Avalia&ccedil;&atilde;o &mdash; somente na 3&ordf;.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t2-5">
+      <div class="step-head" onclick="tog('t2-5')">
+        <span class="snum">5</span>
+        <span class="step-title">Servidor insere Autoavalia&ccedil;&atilde;o</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 5&ndash;6</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Autoavalia&ccedil;&atilde;o &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Autoavalia&ccedil;&atilde;o</li>
+          </ul>
+        </div>
+        <div class="alert alert-ok"><span class="alert-icon">&#8505;</span><span>N&atilde;o comp&otilde;e a nota final, mas &eacute; obrigat&oacute;ria. Concluir solicita&ccedil;&atilde;o somente ap&oacute;s inserir.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t2-6">
+      <div class="step-head" onclick="tog('t2-6')">
+        <span class="snum">6</span>
+        <span class="step-title">CGP solicita ci&ecirc;ncia da Chefia e do Avaliado</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es</div>
+        <p>Ap&oacute;s a inser&ccedil;&atilde;o da Avalia&ccedil;&atilde;o da Chefia Imediata, a CGP solicita que a <strong>chefia</strong> e o <strong>servidor avaliado</strong> deem ci&ecirc;ncia via SUAP ao documento inserido.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>A ci&ecirc;ncia de ambos deve ser registrada antes de prosseguir &agrave;s pr&oacute;ximas etapas do processo.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t2-7">
+      <div class="step-head" onclick="tog('t2-7')">
+        <span class="snum">7</span>
+        <span class="step-title">CGP verifica, defere ou indefere e encaminha &agrave; CDP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Documentos corretos: <strong>deferir</strong></li>
+          <li>Documentos incorretos: <strong>indeferir</strong> e nova solicita&ccedil;&atilde;o explicando o que corrigir</li>
+          <li>Ap&oacute;s ci&ecirc;ncia, encaminhar &agrave; <strong>CDP</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /steps etapa 2 tae -->
+
+  <hr class="div">
+
+  <!-- ── ETAPA 3 TAE ── -->
+  <div class="etapa-header">
+    <div class="etapa-num">3</div>
+    <div>
+      <div class="etapa-title">3&ordf; Etapa &mdash; 30&ordm; m&ecirc;s de efetivo exerc&iacute;cio</div>
+      <div class="etapa-sub">Inclui S&iacute;ntese da Avalia&ccedil;&atilde;o e constitui&ccedil;&atilde;o da CAED &bull; Resolu&ccedil;&atilde;o n&ordm; 15/2022</div>
+    </div>
+  </div>
+  <div class="steps">
+
+    <div class="step" id="t3-1">
+      <div class="step-head" onclick="tog('t3-1')">
+        <span class="snum">1</span>
+        <span class="step-title">CGP insere Relat&oacute;rio de Afastamentos e Requerimento de Levantamento</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Relat&oacute;rio de Afastamentos da 3&ordf; etapa</li>
+          <li>Requerimento de Levantamento do Per&iacute;odo Avaliativo da 3&ordf; etapa</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="t3-2">
+      <div class="step-head" onclick="tog('t3-2')">
+        <span class="snum">2</span>
+        <span class="step-title">CGP solicita Juntada de Documentos no SUAP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3 e p. 16</div>
+        <p>A CGP emite a Solicita&ccedil;&atilde;o de Juntada de Documentos endere&ccedil;ada &agrave; chefia e ao servidor.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Prazo para juntada: <strong>5 dias corridos</strong> a partir da data da solicita&ccedil;&atilde;o.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t3-3">
+      <div class="step-head" onclick="tog('t3-3')">
+        <span class="snum">3</span>
+        <span class="step-title">Chefia insere Acompanhamento de Desempenho (durante todo o per&iacute;odo)</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 2&ndash;3</div>
+        <p>Ao menos <strong>uma vez durante o per&iacute;odo avaliativo</strong>, mesmo sem dificuldades.</p>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Acompanhamento de Desempenho &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; dados pessoais e dados pessoais sens&iacute;veis (art. 31 da Lei n&ordm; 12.527/2011)</li>
+            <li><strong>Assunto:</strong> Acompanhamento de Desempenho do servidor [nome do servidor]</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<div class="step" id="t3-4">
+      <div class="step-head" onclick="tog('t3-4')">
+        <span class="snum">4</span>
+        <span class="step-title">Chefia insere Avalia&ccedil;&atilde;o da Chefia Imediata + S&iacute;ntese da Avalia&ccedil;&atilde;o</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 3&ndash;5 e p. 10&ndash;16</div>
+        <p>Na 3&ordf; etapa s&atilde;o <strong>dois documentos obrigat&oacute;rios</strong>:</p>
+
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Documento 1 &mdash; Avalia&ccedil;&atilde;o da Chefia Imediata</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Avalia&ccedil;&atilde;o da Chefia Imediata &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Avalia&ccedil;&atilde;o da Chefia Imediata do servidor [nome]</li>
+          </ul>
+        </div>
+
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Documento 2 &mdash; S&iacute;ntese da Avalia&ccedil;&atilde;o</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; S&iacute;ntese da Avalia&ccedil;&atilde;o &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> S&iacute;ntese da Avalia&ccedil;&atilde;o do servidor [nome]</li>
+          </ul>
+        </div>
+
+        <div class="sintese-box">
+          <h4>&#128221; Como preencher a S&iacute;ntese (p. 15&ndash;16)</h4>
+          <ul>
+            <li>Preencher os subtotais dos 3 per&iacute;odos por fator</li>
+            <li>Preencher a nota de cada per&iacute;odo (pontua&ccedil;&atilde;o obtida em cada etapa)</li>
+            <li>Calcular a M&eacute;dia Global: <strong>(NP1 + NP2 + NP3) &divide; 3</strong></li>
+            <li>Aprova&ccedil;&atilde;o: M&eacute;dia Global &ge; 60 pontos</li>
+          </ul>
+        </div>
+
+        <div class="alert alert-warn"><span class="alert-icon">&#9888;</span><span>Inserir <strong>ambos</strong> os documentos antes de clicar em &ldquo;Concluir Solicita&ccedil;&atilde;o&rdquo; &mdash; irrevers&iacute;vel.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t3-5">
+      <div class="step-head" onclick="tog('t3-5')">
+        <span class="snum">5</span>
+        <span class="step-title">Servidor insere Autoavalia&ccedil;&atilde;o</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 5&ndash;7</div>
+        <div class="suap-box">
+          <div class="suap-title">&#128187; Caminho no SUAP</div>
+          <div class="suap-path">Documentos/Processos <span>&rsaquo;</span> Documentos Eletr&ocirc;nicos <span>&rsaquo;</span> Adicionar Documento de Texto</div>
+          <ul>
+            <li><strong>Tipo:</strong> Requerimento</li>
+            <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Autoavalia&ccedil;&atilde;o &mdash; <strong>TAE</strong></li>
+            <li><strong>N&iacute;vel:</strong> Restrito</li>
+            <li><strong>Hip&oacute;tese Legal:</strong> Informa&ccedil;&atilde;o Pessoal &mdash; art. 31 da Lei n&ordm; 12.527/2011</li>
+            <li><strong>Assunto:</strong> Autoavalia&ccedil;&atilde;o</li>
+          </ul>
+        </div>
+        <div class="alert alert-ok"><span class="alert-icon">&#8505;</span><span>N&atilde;o comp&otilde;e a nota final, mas &eacute; obrigat&oacute;ria. Concluir solicita&ccedil;&atilde;o somente ap&oacute;s inserir.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t3-6">
+      <div class="step-head" onclick="tog('t3-6')">
+        <span class="snum">6</span>
+        <span class="step-title">CGP solicita ci&ecirc;ncia da Chefia e do Avaliado</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es</div>
+        <p>Ap&oacute;s a inser&ccedil;&atilde;o da Avalia&ccedil;&atilde;o da Chefia Imediata, a CGP solicita que a <strong>chefia</strong> e o <strong>servidor avaliado</strong> deem ci&ecirc;ncia via SUAP ao documento inserido.</p>
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>A ci&ecirc;ncia de ambos deve ser registrada antes de prosseguir &agrave;s pr&oacute;ximas etapas do processo.</span></div>
+      </div>
+    </div>
+
+<div class="step" id="t3-7">
+      <div class="step-head" onclick="tog('t3-7')">
+        <span class="snum">7</span>
+        <span class="step-title">CGP verifica, defere ou indefere</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 17</div>
+        <ul>
+          <li>Documentos corretos: <strong>deferir</strong></li>
+          <li>Documentos incorretos: <strong>indeferir</strong> e nova solicita&ccedil;&atilde;o</li>
+        </ul>
+      </div>
+    </div>
+
+<div class="step" id="t3-8">
+      <div class="step-head" onclick="tog('t3-8')">
+        <span class="snum">8</span>
+        <span class="step-title">CGP solicita Portaria da CAED e encaminha ao PROB-DGP</span>
+        <span class="step-arrow">&#8250;</span>
+      </div>
+      <div class="step-body">
+        <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 2</div>
+        <ul>
+          <li>Solicitar emiss&atilde;o da Portaria de designa&ccedil;&atilde;o da CAED</li>
+          <li>Inserir Portaria e Orienta&ccedil;&otilde;es &agrave; CAED no processo</li>
+          <li>Ap&oacute;s parecer da CAED, encaminhar o processo ao <strong>PROB-DGP</strong></li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /steps etapa 3 tae -->
+
+  <!-- Reconsideração TAE -->
+  <div class="recon-block">
+    <div class="recon-title">Pedido de Reconsidera&ccedil;&atilde;o &mdash; Servidor (qualquer etapa)</div>
+    <div class="pref">&#128196; Orienta&ccedil;&otilde;es &mdash; p. 6&ndash;7</div>
+    <div class="suap-box">
+      <div class="suap-title">&#128187; Modelo SUAP &mdash; Servidor</div>
+      <ul>
+        <li><strong>Modelo:</strong> Pessoal &mdash; Est&aacute;gio Probat&oacute;rio &mdash; Requerimento &mdash; Reconsidera&ccedil;&atilde;o/Recurso</li>
+        <li><strong>N&iacute;vel:</strong> Restrito &nbsp;&bull;&nbsp; <strong>Assunto:</strong> Reconsidera&ccedil;&atilde;o/Recurso</li>
+      </ul>
+    </div>
+    <div class="suap-box">
+      <div class="suap-title">&#128187; An&aacute;lise pela Chefia &mdash; Of&iacute;cio</div>
+      <ul>
+        <li><strong>Modelo:</strong> IFSP: EXPEDIENTE &ndash; OF&Iacute;CIO &ndash; USO GERAL</li>
+        <li><strong>Assunto:</strong> An&aacute;lise de Pedido de Reconsidera&ccedil;&atilde;o</li>
+      </ul>
+    </div>
+    <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Prazo do servidor: <strong>10 dias corridos</strong> para dar ci&ecirc;ncia e juntar documentos.</span></div>
+  </div>
+
+</div><!-- /section-tae -->
+
+</main>
+
+<script>
+function voltarInicio() {
+  ['doc','tae'].forEach(function(x){
+    document.getElementById('section-'+x).classList.remove('visible');
+    document.getElementById('tab-'+x).className = 'ctab';
+  });
+  document.getElementById('welcome').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function showCargo(c) {
+  ['doc','tae'].forEach(function(x){
+    document.getElementById('section-'+x).classList.remove('visible');
+    document.getElementById('tab-'+x).className = 'ctab';
+  });
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('section-'+c).classList.add('visible');
+  document.getElementById('tab-'+c).className = 'ctab active-'+c;
+  var first = document.querySelector('#section-'+c+' .step');
+  if(first && !first.classList.contains('open')) first.classList.add('open');
+}
+function tog(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+</script>
+</body>
+</html>
